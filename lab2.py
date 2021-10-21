@@ -9,6 +9,27 @@ class LinkedList:
         self.head = None
         self.tail = None
 
+    def __str__(self):
+        current = self.head
+        lst = []
+        while current.next is not None:
+            lst.append(str(current.data))
+            current = current.next
+        lst.append(str(current.data))
+        new_list = ' -> '.join(lst)
+        return new_list
+
+    def __len__(self):
+        current = self.head
+        counter = 0
+        if self.head is None:
+            return 0
+        else:
+            while current.next is not None:
+                current = current.next
+                counter += 1
+            return counter + 1
+
     def push(self, value):
         new_node = Node(value)
         if self.head is None:
@@ -38,8 +59,9 @@ class LinkedList:
         new_node = Node(value)
         while current.next is not None:
             if after == current:
+                temp = current.next
                 current.next = new_node
-                new_node.next = current.next.next
+                new_node.next = temp
             current = current.next
 
     def pop(self):
@@ -60,12 +82,17 @@ class LinkedList:
         current = self.head
         while current.next is not None:
             if after == current:
-                current.next = current.next.next
+                if current.next.next is None:
+                    current.next = current.next.next
+                    self.tail = current
+                else:
+                    current.next = current.next.next
+                return
             current = current.next
 
     def print(self):
         if self.head is None:
-            return "List empty"
+            print("List empty")
         current = self.head
         lst = []
         while current.next is not None:
@@ -73,21 +100,31 @@ class LinkedList:
             current = current.next
         lst.append(str(current.data))
         new_list = ' -> '.join(lst)
-        return new_list
+        print(new_list)
 
-    def __len__(self):
 
 linked_list = LinkedList()
 assert linked_list.head is None
-linked_list.push(2)
-linked_list.push(3)
-linked_list.push(4)
-linked_list.push(5)
-linked_list.append(1)
-linked_list.remove_last()
-linked_list.remove_last()
-print(linked_list.node(1).data)
-print(linked_list.print())
-print(f"node at 2 {linked_list.node(2)}")
-print(f"head - {linked_list.head.data}")
-print(f"tail - {linked_list.tail.data}")
+linked_list.push(1)
+linked_list.push(0)
+linked_list.print()
+assert str(linked_list) == '0 -> 1'
+linked_list.append(9)
+linked_list.append(10)
+assert str(linked_list) == '0 -> 1 -> 9 -> 10'
+linked_list.print()
+middle_node = linked_list.node(at=1)
+linked_list.insert(5, after=middle_node)
+linked_list.print()
+first_element = linked_list.node(at=0)
+returned_first_element = linked_list.pop()
+assert first_element.data == returned_first_element.data
+last_element = linked_list.node(at=3)
+returned_last_element = linked_list.remove_last()
+assert last_element.data == returned_last_element.data
+linked_list.print()
+second_node = linked_list.node(at=1)
+linked_list.remove(second_node)
+assert str(linked_list) == '1 -> 5'
+linked_list.print()
+print(f"size of list - {linked_list.__len__()}")
