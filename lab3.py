@@ -52,22 +52,18 @@ def prime(n: int, i=2) -> bool:  # 6
 def n_sums(n: int, lst=None, i=0) -> list[int]:  # 7
     if lst is None:
         lst = []
-        for j in range(n):
-            i += 10 ** j * 9
-    if i == 10 ** (n - 1):
+        i = (10 ** n) - 1
+    if i <= 10 ** (n - 1):
         return lst
-    temp_lst = [int(x) for x in str(i)]
     sum_even, sum_odd = 0, 0
-    for index in range(len(temp_lst)):
-        if index % 2 == 0:
-            sum_even += temp_lst[index]
+    for j in range(n):
+        if j % 2 == 0:
+            sum_even += (i // 10 ** j) % 10
         else:
-            sum_odd += temp_lst[index]
+            sum_odd += (i // 10 ** j) % 10
     if sum_even == sum_odd:
-        strings = [str(integer) for integer in temp_lst]
-        a_string = "".join(strings)
-        an_integer = int(a_string)
-        lst.append(an_integer)
+        lst.append(i)
+        return n_sums(n, lst, i - 11)
     return n_sums(n, lst, i - 1)
 
 
