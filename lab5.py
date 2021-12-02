@@ -61,6 +61,16 @@ class BinaryTree:
 
     def traverse_pre_order(self, visit: Callable[[Any], None]):
         self.root.traverse_pre_order(visit)
+        
+    def show(self):
+        if self.root is not None:
+            self._show(self.root)
+
+    def _show(self, node: BinaryNode):
+        if node is not None:
+            self._show(node.left_child)
+            print(str(node.value) + '')
+            self._show(node.right_child)
 
 
 tree = BinaryTree(10)
