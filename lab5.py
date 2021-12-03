@@ -1,4 +1,4 @@
-from typing import Any, Callable
+from typing import Any, Callable, List
 
 
 class BinaryNode:
@@ -61,7 +61,7 @@ class BinaryTree:
 
     def traverse_pre_order(self, visit: Callable[[Any], None]):
         self.root.traverse_pre_order(visit)
-        
+
     def show(self):
         if self.root is not None:
             self._show(self.root)
@@ -69,8 +69,20 @@ class BinaryTree:
     def _show(self, node: BinaryNode):
         if node is not None:
             self._show(node.left_child)
-            print(str(node.value) + '')
+            print(f"{node.value}")
             self._show(node.right_child)
+
+
+def right_line(tree: BinaryTree) -> List[BinaryNode]:
+    lst = []
+    lst.append(tree.root.value)
+
+    def get_node(tree: BinaryNode):
+        if tree.left_child is not None:
+            lst.append(tree.left_child.value)
+        if tree.right_child is not None:
+            lst.append(tree.right_child.value)
+    return lst
 
 
 tree = BinaryTree(10)
@@ -85,3 +97,5 @@ assert tree.root.right_child.value == 2
 assert tree.root.right_child.is_leaf() is False
 assert tree.root.left_child.left_child.value == 1
 assert tree.root.left_child.left_child.is_leaf() is True
+tree.show()
+print(right_line(tree))
