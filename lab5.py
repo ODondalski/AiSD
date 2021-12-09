@@ -22,12 +22,12 @@ class BinaryNode:
     def add_right_child(self, value: Any):
         self.right_child = BinaryNode(value)
 
-    def traverse_in_order(self, visit: Callable[[Any, int], None], level=0):
+    def traverse_in_order(self, visit: Callable[[Any], None]):
         if self.left_child is not None:
-            self.left_child.traverse_in_order(visit, level + 1)
-        visit(self, level)
+            self.left_child.traverse_in_order(visit)
+        visit(self)
         if self.right_child is not None:
-            self.right_child.traverse_in_order(visit, level + 1)
+            self.right_child.traverse_in_order(visit)
 
     def traverse_post_order(self, visit: Callable[[Any], None]):
         if self.left_child is not None:
@@ -36,12 +36,12 @@ class BinaryNode:
             self.right_child.traverse_post_order(visit)
         visit(self)
 
-    def traverse_pre_order(self, visit: Callable[[Any, int], None], level=0):
-        visit(self, level)
+    def traverse_pre_order(self, visit: Callable[[Any], None]):
+        visit(self)
         if self.left_child is not None:
-            self.left_child.traverse_pre_order(visit, level + 1)
+            self.left_child.traverse_pre_order(visit)
         if self.right_child is not None:
-            self.right_child.traverse_pre_order(visit, level + 1)
+            self.right_child.traverse_pre_order(visit)
 
     def __str__(self):
         return str(self.value)
@@ -63,10 +63,12 @@ class BinaryTree:
         self.root.traverse_pre_order(visit)
 
     def show(self):
-        def _show(show_node: BinaryNode, level):
-            print(' ' * 3 * level + '->', show_node.value)
-
-        self.traverse_in_order(_show)
+        def _show(node: BinaryNode, level=0):
+            if node is not None:
+                _show(node.right_child, level + 1)
+                print(' ' * 3 * level + '->', node.value)
+                _show(node.left_child, level + 1)
+        _show(self.root)
 
 
 def right_line(tree_node: BinaryTree) -> List[BinaryNode]:
@@ -79,12 +81,16 @@ def right_line(tree_node: BinaryTree) -> List[BinaryNode]:
             lst.append(node.right_child.value)
             _right_line(node.right_child)
 
-    def _right_line2(node: BinaryNode, level):
+    def _right_line2(node: BinaryNode, level=0):
         if level > len(lst) - 1:
             lst.append(node.value)
+        if node.right_child is not None:
+            _right_line2(node.right_child, level + 1)
+        if node.left_child is not None:
+            _right_line2(node.left_child, level + 1)
 
     _right_line(tree_node.root)
-    tree_node.root.traverse_pre_order(_right_line2)
+    _right_line2(tree_node.root)
     return lst
 
 
